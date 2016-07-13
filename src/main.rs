@@ -68,7 +68,7 @@ fn main() {
         mv_file(tmp_file_name, destination_html);
         convert_to_pdf(destination_html, destination_pdf);
 
-        Ok( Response::with((status::Ok, format!("http://46.101.147.77/static/{}.pdf", random_name).to_string() )) )
+        Ok( Response::with((status::Ok, format!("http://html2pdf.raph.site/static/{}.pdf", random_name).to_string() )) )
     }
 }
 
