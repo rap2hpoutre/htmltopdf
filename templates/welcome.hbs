@@ -1,9 +1,64 @@
-<html>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sawmill</title>
+  <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700' rel='stylesheet' type='text/css'>
+  <style type="text/css">
+    * {
+      font-family: "Source Code Pro", Menlo, Monaco, Consolas, "Courier New", monospace;
+    }
+    body {
+      margin: 40px auto;
+      max-width: 330px;
+      line-height: 1.6;
+      font-size: 18px;
+      color: #444;
+      padding: 0 10px;
+    }
+    h1, h2, h3 {
+      line-height: 1.2
+    }
+    pre,
+    form {
+      background-color: #dedede;
+      font-size: 12px;
+      padding: 15px;
+    }
+    button {
+      margin: auto;
+      width: 100%;
+      padding: 5px;
+      margin-top: 10px;
+      background: white;
+    }
+  </style>
+</head>
 <body>
-<p>Test {{version}}</p>
+<h1>HTML to PDF<br> as a Service</h1>
+<br>
+<p>
+  Easy to use, just use CURL...
+</p>
+<pre>curl -F "file=@/path/to/your/file.html" \
+   http://html2pdf.raph.site/</pre>
+<p>
+  ...and it returns instantly a downloadable link to your PDF
+</p>
+<pre>http://html2pdf.raph.site/static/b7ae8.pdf</pre>
+<br>
+<p>
+  Or use that form:
+</p>
 <form action="/" method="post" enctype="multipart/form-data">
   <input type="file" name="file">
-  <button type="submit">Envoyer</button>
+  <br>
+  <button type="submit">Send</button>
 </form>
+<br>
+<p>
+  Made with &#128099; by <a href="https://twitter.com/rap2h">@rap2h</a>
+</p>
 </body>
 </html>
