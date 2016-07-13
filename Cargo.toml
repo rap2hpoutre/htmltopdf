@@ -1,0 +1,11 @@
+[package]
+name = "html2pdf"
+version = "0.1.0"
+authors = ["rap2hpoutre <raphaelht@gmail.com>"]
+
+[dependencies]
+iron = "0.3"
+router = "*"
+handlebars-iron = "*"
+params="0.2.2"
+uuid = { version = "0.2", features = ["v4"] }
