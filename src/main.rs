@@ -12,7 +12,7 @@ use handlebars_iron::{Template, HandlebarsEngine, DirectorySource};
 use std::collections::BTreeMap;
 use params::Params;
 use params::Value;
-use std::process::Command;
+use std::process::{Command, Stdio};
 use uuid::Uuid;
 
 struct Custom404;
@@ -72,12 +72,14 @@ fn main() {
     }
 }
 
-fn convert_to_pdf(destination_html: &str, destination_pdf: &str,) {
+fn convert_to_pdf(destination_html: &str, destination_pdf: &str) {
     Command::new("xvfb-run")
         .arg("-a")
         .arg("wkhtmltopdf")
         .arg(destination_html)
         .arg(destination_pdf)
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
         .spawn()
         .expect("failed to execute process");
 }
