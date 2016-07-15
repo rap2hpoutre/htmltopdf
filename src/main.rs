@@ -74,6 +74,7 @@ fn main() {
 
 fn convert_to_pdf(destination_html: &str, destination_pdf: &str,) {
     Command::new("xvfb-run")
+        .arg("-a")
         .arg("wkhtmltopdf")
         .arg(destination_html)
         .arg(destination_pdf)
