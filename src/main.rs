@@ -58,43 +58,73 @@ fn main() {
         Ok(resp)
     }
 
-    // Convert HTML to PDF
+    // Convert HTML file from request to PDF
     fn convert(req: &mut Request) -> IronResult<Response> {
         let random_name = &format!("{}", Uuid::new_v4());
-        let tmp_file_name = &tmp_uploaded_filename(req, "file");
-        let destination_html = &{"./static/".to_string() + random_name + ".html"};
-        let destination_pdf = &{"./static/".to_string() + random_name + ".pdf"};
+        let destination_pdf = &{ "./static/".to_string() + random_name + ".pdf" };
 
-        mv_file(tmp_file_name, destination_html);
-        convert_to_pdf(destination_html, destination_pdf);
+        // Get the HTML file
+        let html = &match tmp_uploaded_filename(req, "file") {
+            Some(tmp_file_name) => {
+                let target_file_name = &{ "./static/".to_string() + random_name + ".html" };
+                mv_file(&tmp_file_name, target_file_name);
+                target_file_name.to_string()
+            },
+            None => {
+                "./templates/fail.html".to_string()
+            },
+        };
 
-        Ok( Response::with((status::Ok, format!("http://html2pdf.raph.site/static/{}.pdf\n", random_name).to_string() )) )
+        // Footer
+        let footer_html: Option<String> = match tmp_uploaded_filename(req, "footer") {
+            Some(tmp_file_name) => {
+                let target_file_name = { "./static/".to_string() + random_name + "-footer.html" };
+                mv_file(&tmp_file_name, &target_file_name);
+                Some(target_file_name)
+            },
+            _ => {
+                None
+            },
+        };
+
+        // Convert it to HTML
+        convert_to_pdf(html, destination_pdf, footer_html);
+
+        Ok(Response::with((status::Ok, format!("http://html2pdf.raph.site/static/{}.pdf\n", random_name).to_string())))
     }
 }
 
-fn convert_to_pdf(destination_html: &str, destination_pdf: &str) {
-    Command::new("xvfb-run")
-        .arg("-a")
+fn convert_to_pdf(html: &str, destination_pdf: &str, footer_html: Option<String>) {
+    let mut c = Command::new("xvfb-run");
+
+    c.arg("-a")
         .arg("wkhtmltopdf")
-        .arg(destination_html)
-        .arg(destination_pdf)
-        .stdout(Stdio::null())
+        .arg(html)
+        .arg(destination_pdf);
+
+    if let Some(f) = footer_html {
+        c.arg("--footer-html")
+            .arg(&f.to_string());
+    }
+
+    c.stdout(Stdio::null())
         .stderr(Stdio::null())
         .spawn()
         .expect("failed to execute process");
 }
 
-fn tmp_uploaded_filename(req: &mut Request, param_name: &str) -> String {
+fn tmp_uploaded_filename(req: &mut Request, param_name: &str) -> Option<String> {
     match req.get_ref::<Params>().unwrap().find(&[param_name]) {
         Some(&Value::File(ref file)) => {
-            file.path().to_str().unwrap().to_string()
+            Some(file.path().to_str().unwrap().to_string())
         },
         _ => {
-            panic!("no file") // to do default file with error text
+            None
         },
     }
 }
 
+// Move a file (just an mv alias)
 fn mv_file(source_name: &str, destination_name: &str) {
     let output = Command::new("mv")
         .arg(source_name)
