@@ -12,7 +12,7 @@ use handlebars_iron::{Template, HandlebarsEngine, DirectorySource};
 use std::collections::BTreeMap;
 use params::Params;
 use params::Value;
-use std::process::{Command, Stdio};
+use std::process::Command;
 use uuid::Uuid;
 
 struct Custom404;
@@ -107,9 +107,7 @@ fn convert_to_pdf(html: &str, destination_pdf: &str, footer_html: Option<String>
 
     c.arg(html)
         .arg(destination_pdf)
-        .stdout(Stdio::null())
-        .stderr(Stdio::null())
-        .spawn()
+        .output()
         .expect("failed to execute process");
 }
 
