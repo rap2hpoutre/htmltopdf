@@ -95,19 +95,14 @@ fn main() {
 }
 
 fn convert_to_pdf(html: &str, destination_pdf: &str, footer_html: Option<String>) {
-    let mut c = Command::new("xvfb-run");
-
-    c.arg("-a")
-        .arg("wkhtmltopdf");
-
+    let mut c = Command::new("wkhtmltopdf");
     if let Some(f) = footer_html {
         c.arg("--footer-html")
             .arg(&f.to_string());
     }
-
-    c.arg(html)
+    let output = c.arg(html)
         .arg(destination_pdf)
-        .output()
+        .spawn()
         .expect("failed to execute process");
 }
 
