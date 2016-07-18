@@ -105,7 +105,7 @@ fn convert_to_pdf(html: &str, destination_pdf: &str, footer_html: Option<String>
             .arg(&f.to_string());
     }
 
-    c..arg(html)
+    c.arg(html)
         .arg(destination_pdf)
         .stdout(Stdio::null())
         .stderr(Stdio::null())
