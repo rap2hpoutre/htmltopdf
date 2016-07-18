@@ -100,7 +100,7 @@ fn convert_to_pdf(html: &str, destination_pdf: &str, footer_html: Option<String>
         c.arg("--footer-html")
             .arg(&f.to_string());
     }
-    let output = c.arg(html)
+    c.arg(html)
         .arg(destination_pdf)
         .spawn()
         .expect("failed to execute process");
